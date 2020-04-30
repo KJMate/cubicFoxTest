@@ -54,7 +54,7 @@ public class ProductService {
 		if(product == null) {
 			throw new ProductNotFoundException("Product not found by id: " + id);
 		}
-		if(updatedProduct.getCode().length() != 6) {
+		if(isNumeric(updatedProduct.getCode()) && updatedProduct.getCode().length() != 6) {
 			throw new ProductDetailFormatException("Product code length must be 6 character, your length is: " + updatedProduct.getCode().length());
 		}
 		if(updatedProduct.getName().equals("")) {
@@ -83,5 +83,17 @@ public class ProductService {
 		}
 		newRate.setProductid(product.getId());
 		rateRepository.save(newRate);
+	}
+	
+	public static boolean isNumeric(String strNum) {
+	    if (strNum == null) {
+	        return false;
+	    }
+	    try {
+	        Integer.parseInt(strNum);
+	    } catch (NumberFormatException nfe) {
+	    	throw new ProductDetailFormatException("Contains non-numeric characters");
+	    }
+	    return true;
 	}
 }
